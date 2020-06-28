@@ -23,6 +23,22 @@ const initialContacts = {
     data: null,
     loading: false,
   },
+  deleteContact: {
+    error: null,
+    data: null,
+    loading: false,
+  },
+
+  starContact: {
+    error: null,
+    data: null,
+    loading: false,
+  },
+  editContact: {
+    error: null,
+    data: null,
+    loading: false,
+  },
 };
 
 // Create context

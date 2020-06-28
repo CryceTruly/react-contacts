@@ -3,9 +3,9 @@ import { lazy } from "react";
 const Register = lazy(() => import("../containers/Auth/Register"));
 const LoginContainer = lazy(() => import("../containers/Auth/Login"));
 const ContactsContainer = lazy(() =>
-  import("../containers/home/CreateContact")
+  import("../containers/contacts/CreateContact")
 );
-const Home = lazy(() => import("../containers/home"));
+const Home = lazy(() => import("../containers/contacts/List"));
 const routes = [
   {
     path: "/auth/register",

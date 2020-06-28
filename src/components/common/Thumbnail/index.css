@@ -1,0 +1,9 @@
+.thumbnail {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: bold;
+  margin-right: 15px;
+}
