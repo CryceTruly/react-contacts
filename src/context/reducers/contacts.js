@@ -1,3 +1,13 @@
+import { initialContacts } from "../GlobalState";
+
+const getNextData = (payload, prev) => {
+  if (prev) {
+    return [payload, ...prev];
+  } else {
+    return payload;
+  }
+};
+
 export default (state, action) => {
   switch (action.type) {
     case "ADD_CONTACT_START":
@@ -11,6 +21,11 @@ export default (state, action) => {
     case "ADD_CONTACT_SUCCESS":
       return {
         ...state,
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          data: getNextData(action.payload.data, state.contacts.data),
+        },
         addContact: {
           ...state.contacts.addContact,
           loading: false,
@@ -34,6 +49,7 @@ export default (state, action) => {
         contacts: {
           ...state.contacts,
           loading: true,
+          error: null,
         },
       };
 
@@ -139,7 +155,6 @@ export default (state, action) => {
       };
 
     case "EDIT_CONTACT_SUCCESS":
-      console.log("action.payload", action.payload);
       return {
         ...state,
         editContact: {
@@ -156,6 +171,41 @@ export default (state, action) => {
         },
       };
 
+    case "CLEAR_EDIT_CONTACT":
+      return {
+        ...state,
+        editContact: {
+          ...state.contacts.editContact,
+          loading: false,
+          data: null,
+        },
+      };
+
+    case "SEARCH_CONTACTS":
+      const userText = action.payload.replace("+", "").toLowerCase();
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          isSearchActive: !!action.payload.length ? [] : false,
+          foundContacts: state.contacts.data.filter((item) => {
+            try {
+              return (
+                item.first_name.toLowerCase().search(userText) !== -1 ||
+                item.last_name.toLowerCase().search(userText) !== -1 ||
+                item.phone_number.toLowerCase().search(userText) !== -1 ||
+                item.country_code
+                  .replace("+")
+                  .toLowerCase()
+                  .search(userText) !== -1
+              );
+            } catch (error) {
+              return [];
+            }
+          }),
+        },
+      };
+
     case "EDIT_CONTACT_ERROR":
       return {
         ...state,
@@ -165,6 +215,13 @@ export default (state, action) => {
           error: action.payload,
         },
       };
+
+    case "LOGOUT_USER_OUT": {
+      return {
+        ...state,
+        contacts: initialContacts,
+      };
+    }
 
     default:
       return state;

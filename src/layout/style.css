@@ -2,3 +2,46 @@
   display: flex;
   align-items: center;
 }
+
+.list-item {
+  margin-top: 15px;
+  cursor: pointer;
+  padding: 55px;
+}
+.list-item:hover {
+  background-color: #f8f9fa;
+}
+.name {
+  display: inline;
+  max-width: 35%;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+  direction: ltr;
+  color: #202124;
+  font-size: 17px;
+  unicode-bidi: embed;
+}
+.phone-number {
+  color: #5f6368;
+  display: inline;
+  flex-shrink: 3;
+  font-size: 0.8rem;
+  margin: auto 1rem;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  width: 100%;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+#thumb {
+  width: 48px;
+  height: 48px;
+}
+
+.contacts-wrapper {
+  margin: 50px;
+}

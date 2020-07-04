@@ -1,5 +1,4 @@
 import React, { createContext, useReducer } from "react";
-import reducers from "./reducers/index";
 import auth from "./reducers/auth";
 import contactsReducer from "./reducers/contacts";
 
@@ -11,11 +10,13 @@ const initialState = {
     loading: false,
   },
 };
-const initialContacts = {
+export const initialContacts = {
   contacts: {
     error: null,
     data: null,
     loading: false,
+    searchActive: false,
+    foundContacts: [],
   },
 
   addContact: {

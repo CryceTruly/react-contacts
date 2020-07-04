@@ -1,13 +1,10 @@
 import { useState, useContext, useEffect, useRef } from "react";
-//import { useHistory } from "react-router-dom";
 import { GlobalContext } from "../../../context/GlobalState";
-import cogoToast from "cogo-toast";
 import { useHistory } from "react-router-dom";
 import { createContact } from "../../../context/actions/contacts";
-import uploadTofirebase from "./uploadTofirebase";
 
 export default () => {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ isFavorite: false });
   const { contactsState: state, contactsDispatch: dispatch } = useContext(
     GlobalContext
   );
@@ -16,11 +13,11 @@ export default () => {
   const history = useHistory();
   // const isEmpty = (field) => field && field === "";
 
+
   useEffect(() => {
     if (data) {
       history.push("");
     }
-    // clearAuthState();
   }, [data]);
 
   useEffect(() => {

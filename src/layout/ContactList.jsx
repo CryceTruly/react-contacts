@@ -1,65 +1,92 @@
 import React from "react";
 import AppHeader from "../components/common";
-import {
-  Container,
-  List,
-  Button,
-  Image,
-  Label,
-  Segment,
-} from "semantic-ui-react";
+import { Container, List, Header } from "semantic-ui-react";
 import FavoriteContacts from "./Favorite";
 import Thumbnail from "../components/common/Thumbnail";
 import "./style.css";
 import ContactDetailContainer from "../containers/contacts/Detail";
+import Message from "../components/common/Message";
+import ItemsPlaceholder from "./Favorite/ItemsLoading";
 
 const ContactList = ({
   data: {
-    contacts: { loading, data, error },
+    fetchContacts,
+    contacts: { loading, data, isSearchActive, foundContacts, error },
     detail,
   },
 }) => {
+  const currentContacts = isSearchActive ? foundContacts : data;
   return (
     <div>
       <AppHeader />
-      <Container>
+      <Container className="contacts-wrapper">
         <FavoriteContacts
           onItemClick={(item) => {
             detail.onItemClicked(item);
           }}
-          favoriteContacts={{ data, loading, error }}
+          favoriteContacts={{
+            data: currentContacts,
+            loading,
+            error,
+            isSearchActive,
+            fetchContacts,
+          }}
         />
+        <Header size="medium">ALL </Header>
+        {error && !loading && (
+          <Message
+            error
+            message={error.detail ? error.detail : error}
+            action={{
+              onClick: () => {
+                fetchContacts();
+              },
+            }}
+          />
+        )}
 
-        <Segment>
-          All Contacts
-          <List verticalAlign="middle">
-            {data?.map((el) => (
-              <List.Item
-                onClick={() => {
-                  detail.onItemClicked(el);
-                }}
-              >
-                <List.Content floated="right">
-                  <span>
-                    {el.country_code}
-                    {el.phone_number}
-                  </span>
-                </List.Content>
+        {!loading && currentContacts?.length === 0 && (
+          <Message error={false} message="No Contacts to show" />
+        )}
 
-                <List.Content className="bio">
-                  {" "}
-                  <Thumbnail
-                    style={{ width: 55, height: 55 }}
-                    avatar={el.contact_picture}
-                  />{" "}
-                  {el.first_name}
-                </List.Content>
-              </List.Item>
-            ))}
-          </List>
-        </Segment>
+        {loading && (
+          <>
+            <ItemsPlaceholder />
+            <ItemsPlaceholder />
+            <ItemsPlaceholder />
+          </>
+        )}
+
+        <List>
+          {currentContacts?.map((el) => (
+            <List.Item
+              className="list-item"
+              onClick={() => {
+                detail.onItemClicked(el);
+              }}
+            >
+              <List.Content floated="right">
+                <span className="phone-number">
+                  {el.country_code}
+                  {el.phone_number}
+                </span>
+              </List.Content>
+
+              <List.Content className="bio">
+                {" "}
+                <Thumbnail
+                  avatar={el.contact_picture}
+                  name={el.first_name}
+                  secondName={el.last_name}
+                />{" "}
+                <span className="name">
+                  {el.first_name} {el.last_name}
+                </span>
+              </List.Content>
+            </List.Item>
+          ))}
+        </List>
       </Container>
-
       <ContactDetailContainer {...detail} />
     </div>
   );

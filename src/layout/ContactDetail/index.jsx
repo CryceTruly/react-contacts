@@ -1,13 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
-import {
-  Modal,
-  Button,
-  Image,
-  Header,
-  Icon,
-  Flag,
-  Confirm,
-} from "semantic-ui-react";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { Modal, Button, Header, Icon, Flag, Confirm } from "semantic-ui-react";
 import countries from "../../utils/countries";
 import Thumbnail from "../../components/common/Thumbnail";
 import EditContactContainer from "../../containers/contacts/Edit";
@@ -24,13 +16,13 @@ const ContactDetail = ({
 }) => {
   const {
     contactsState: {
-      deleteContact: { error, loading, data },
+      deleteContact: { loading, data },
       starContact: { loading: starLoading, data: newContact },
     },
     contactsDispatch: dispatch,
   } = useContext(GlobalContext);
 
-  console.log("newContact", newContact);
+  const contactRef = useRef(null);
 
   useEffect(() => {
     if (starLoading) {
@@ -39,9 +31,12 @@ const ContactDetail = ({
   }, [starLoading]);
 
   useEffect(() => {
-    if (newContact) {
+    if (newContact && open) {
       cogoToast.success("Contact updated...");
-      setContact(newContact);
+      if (newContact !== contactRef.current) {
+        setContact(newContact);
+        contactRef.current = newContact;
+      }
     }
   }, [newContact]);
 
@@ -72,6 +67,7 @@ const ContactDetail = ({
     <>
       <Confirm
         open={deleteConfirmOpen}
+        centered={false}
         onCancel={handleCancel}
         onConfirm={handleConfirm}
       />
@@ -84,11 +80,20 @@ const ContactDetail = ({
           setOpen={setEditOpen}
         />
       )}
+      {/* <TransitionablePortal
+        closeIcon
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setContact(null);
+        }}
+      > */}
       <Modal
         closeIcon
         open={open}
         onClose={() => {
           setOpen(false);
+          setContact(null);
         }}
         centered={false}
       >
@@ -110,7 +115,6 @@ const ContactDetail = ({
             <Thumbnail
               name={contact?.first_name}
               secondName={contact?.last_name}
-              style={{ width: 45, height: 45 }}
               avatar={contact?.contact_picture}
             />
 
@@ -125,18 +129,20 @@ const ContactDetail = ({
 
           <div className="right-icons">
             <Button
+              basic
               disabled={starLoading}
               onClick={() =>
                 starContact(contact?.is_favorite, contact?.id)(dispatch)
               }
             >
-              {contact?.is_favorite ? "Un star" : "Star"}
+              {contact?.is_favorite ? "unstar" : "Star"}
             </Button>
 
             <Button
               icon
               labelPosition="right"
               positive
+              basic
               onClick={() => {
                 setEditOpen(true);
               }}
@@ -149,6 +155,7 @@ const ContactDetail = ({
               icon
               loading={loading}
               disabled={loading}
+              basic
               labelPosition="right"
               onClick={() => {
                 setDeleteConfirmOpen(true);
@@ -178,6 +185,7 @@ const ContactDetail = ({
           </Modal.Description>
         </Modal.Content>
       </Modal>
+      {/* </TransitionablePortal> */}
     </>
   );
 };

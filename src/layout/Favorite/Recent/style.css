@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   margin: 0 auto;
-  max-width: 48.25rem;
+  max-width: 57.25rem;
   outline: none;
   overflow-y: auto;
 }
@@ -37,7 +37,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: pre;
-  font-size: 12px;
+  font-size: 17px;
   color: #333556;
 }
 

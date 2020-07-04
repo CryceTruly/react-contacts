@@ -13,10 +13,7 @@ const Thumbnail = React.memo(
     return (
       <>
         {avatar && !hasError ? (
-          <Placeholder
-            className={`thumbnail ${className}`}
-            style={{ ...style }}
-          >
+          <Placeholder style={{ ...style }}>
             <Image
               src={avatar}
               alt=""
@@ -27,7 +24,7 @@ const Thumbnail = React.memo(
               style={{ ...style }}
               onLoad={() => setLoad(false)}
               hidden={Load}
-            />
+            ></Image>
           </Placeholder>
         ) : (
           <div
@@ -54,11 +51,6 @@ const Thumbnail = React.memo(
   }
 );
 
-Thumbnail.defaultProps = {
-  secondName: null,
-  style: {},
-};
-
 Thumbnail.propTypes = {
   avatar: PropTypes.string.isRequired,
   name: PropTypes.string,
@@ -66,10 +58,10 @@ Thumbnail.propTypes = {
   style: PropTypes.objectOf(Object),
   height: PropTypes.number,
 };
+
 Thumbnail.defaultProps = {
-  name: "A",
-  secondName: "A",
-  style: PropTypes.objectOf(Object),
-  height: 40,
+  secondName: null,
+  style: { width: 45, height: 45, marginRight: 15 },
 };
+
 export default Thumbnail;

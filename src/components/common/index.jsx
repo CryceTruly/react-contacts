@@ -1,46 +1,71 @@
-import React from "react";
-import { Menu, Container, Button, Image, Icon } from "semantic-ui-react";
+import React, { useContext } from "react";
+import { Menu, Button, Image, Icon, Input } from "semantic-ui-react";
 import logo from "./logo.svg";
 import { Link, useLocation, useHistory } from "react-router-dom";
+import { searchContacts } from "../../context/actions/contacts";
+import { GlobalContext } from "../../context/GlobalState";
+import { logout } from "../../context/actions/auth";
 
 const AppHeader = () => {
   const location = useLocation();
-  const url = location.pathname;
   const history = useHistory();
+  const { contactsDispatch: dispatch } = useContext(GlobalContext);
+  const path = location.pathname;
+  const onChange = (e, { value }) => {
+    searchContacts(value?.trim()?.replace(/" "/g, ""))(dispatch);
+  };
+
   return (
-    <Menu pointing={true} secondary={true} size="huge">
+    <Menu pointing={true} secondary={true}>
       <Image src={logo} width={60} />
       <Menu.Item
         as={Link}
         to="/"
         style={{ marginLeft: -35, fontSize: 24, paddingRight: 5 }}
       >
-        ContactsList
+        TrulyContacts
       </Menu.Item>
-      {url === "/" && (
+
+      {path === "/" && (
         <Menu.Item position="right">
-          <Button
-            as={Link}
-            to="/contacts/create"
-            inverted={true}
-            primary={true}
-            size="tiny"
-            style={{ marginLeft: "0.5em" }}
-          >
-            New Contact
-          </Button>
-          &nbsp; &nbsp; &nbsp;
-          <Button
-            onClick={() => {
-              localStorage.removeItem("token");
-              history.push("/auth/login");
-            }}
-            size="tiny"
-            inverted={true}
-            content="Log out"
-            primary
+          <Input
+            icon="search"
+            placeholder="Search..."
+            onChange={onChange}
+            style={{ width: 300 }}
           />
         </Menu.Item>
+      )}
+      {localStorage.token && (
+        <>
+          <Menu.Item position="right">
+            <Button
+              basic
+              as={Link}
+              to="/contacts/create"
+              primary={true}
+              size="tiny"
+            >
+              <Icon name="add" />
+              New Contact
+            </Button>
+          </Menu.Item>
+
+          <Menu.Item>
+            <Button
+              color="red"
+              icon
+              basic
+              onClick={() => {
+                logout(history)(dispatch);
+              }}
+              size="tiny"
+            >
+              <Icon name="log out" />
+              Log out
+            </Button>
+          </Menu.Item>
+        </>
       )}
     </Menu>
   );
