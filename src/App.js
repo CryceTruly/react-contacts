@@ -41,7 +41,6 @@ const App = () => {
             {routes.map((route, i) => (
               <RouteWithSubRoutes key={i} {...route} history={history} />
             ))}
-            <Route path="*" exact component={NotFoundPage} />
           </Switch>
         </Suspense>
       </Router>
