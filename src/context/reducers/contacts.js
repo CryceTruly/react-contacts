@@ -1,4 +1,24 @@
-import { initialContacts } from "../GlobalState";
+import initialContactsState from "../initialStates/initialContactsState";
+import {
+  ADD_CONTACT_START,
+  ADD_CONTACT_SUCCESS,
+  ADD_CONTACT_ERROR,
+  GET_CONTACTS_START,
+  GET_CONTACTS_SUCCESS,
+  DELETE_CONTACT_START,
+  GET_CONTACTS_ERROR,
+  DELETE_CONTACT_SUCCESS,
+  DELETE_CONTACT_ERROR,
+  STAR_CONTACT_START,
+  STAR_CONTACT_SUCCESS,
+  STAR_CONTACT_ERROR,
+  EDIT_CONTACT_START,
+  EDIT_CONTACT_SUCCESS,
+  EDIT_CONTACT_ERROR,
+  CLEAR_EDIT_CONTACT,
+  SEARCH_CONTACTS,
+  LOGOUT_USER_OUT,
+} from "../../constants/actionTypes";
 
 const getNextData = (payload, prev) => {
   if (prev) {
@@ -10,7 +30,7 @@ const getNextData = (payload, prev) => {
 
 export default (state, action) => {
   switch (action.type) {
-    case "ADD_CONTACT_START":
+    case ADD_CONTACT_START:
       return {
         ...state,
         addContact: {
@@ -18,7 +38,7 @@ export default (state, action) => {
           loading: true,
         },
       };
-    case "ADD_CONTACT_SUCCESS":
+    case ADD_CONTACT_SUCCESS:
       return {
         ...state,
         contacts: {
@@ -33,7 +53,7 @@ export default (state, action) => {
         },
       };
 
-    case "ADD_CONTACT_ERROR":
+    case ADD_CONTACT_ERROR:
       return {
         ...state,
         addContact: {
@@ -43,7 +63,7 @@ export default (state, action) => {
         },
       };
 
-    case "GET_CONTACTS_START":
+    case GET_CONTACTS_START:
       return {
         ...state,
         contacts: {
@@ -53,7 +73,7 @@ export default (state, action) => {
         },
       };
 
-    case "GET_CONTACTS_SUCCESS":
+    case GET_CONTACTS_SUCCESS:
       return {
         ...state,
         contacts: {
@@ -63,7 +83,7 @@ export default (state, action) => {
         },
       };
 
-    case "GET_CONTACTS_ERROR":
+    case GET_CONTACTS_ERROR:
       return {
         ...state,
         contacts: {
@@ -73,7 +93,7 @@ export default (state, action) => {
         },
       };
 
-    case "DELETE_CONTACT_START":
+    case DELETE_CONTACT_START:
       return {
         ...state,
         deleteContact: {
@@ -82,7 +102,7 @@ export default (state, action) => {
         },
       };
 
-    case "DELETE_CONTACT_SUCCESS":
+    case DELETE_CONTACT_SUCCESS:
       return {
         ...state,
         deleteContact: {
@@ -99,7 +119,7 @@ export default (state, action) => {
         },
       };
 
-    case "DELETE_CONTACT_ERROR":
+    case DELETE_CONTACT_ERROR:
       return {
         ...state,
         deleteContact: {
@@ -109,7 +129,7 @@ export default (state, action) => {
         },
       };
 
-    case "STAR_CONTACT_START":
+    case STAR_CONTACT_START:
       return {
         ...state,
         starContact: {
@@ -118,7 +138,7 @@ export default (state, action) => {
         },
       };
 
-    case "STAR_CONTACT_SUCCESS":
+    case STAR_CONTACT_SUCCESS:
       return {
         ...state,
         starContact: {
@@ -135,7 +155,7 @@ export default (state, action) => {
         },
       };
 
-    case "STAR_CONTACT_ERROR":
+    case STAR_CONTACT_ERROR:
       return {
         ...state,
         starContact: {
@@ -145,7 +165,7 @@ export default (state, action) => {
         },
       };
 
-    case "EDIT_CONTACT_START":
+    case EDIT_CONTACT_START:
       return {
         ...state,
         editContact: {
@@ -154,7 +174,7 @@ export default (state, action) => {
         },
       };
 
-    case "EDIT_CONTACT_SUCCESS":
+    case EDIT_CONTACT_SUCCESS:
       return {
         ...state,
         editContact: {
@@ -171,7 +191,7 @@ export default (state, action) => {
         },
       };
 
-    case "CLEAR_EDIT_CONTACT":
+    case CLEAR_EDIT_CONTACT:
       return {
         ...state,
         editContact: {
@@ -179,9 +199,14 @@ export default (state, action) => {
           loading: false,
           data: null,
         },
+        addContact: {
+          ...state.contacts.addContact,
+          loading: false,
+          data: null,
+        },
       };
 
-    case "SEARCH_CONTACTS":
+    case SEARCH_CONTACTS:
       const userText = action.payload.replace("+", "").toLowerCase();
       return {
         ...state,
@@ -206,7 +231,7 @@ export default (state, action) => {
         },
       };
 
-    case "EDIT_CONTACT_ERROR":
+    case EDIT_CONTACT_ERROR:
       return {
         ...state,
         editContact: {
@@ -216,10 +241,10 @@ export default (state, action) => {
         },
       };
 
-    case "LOGOUT_USER_OUT": {
+    case LOGOUT_USER_OUT: {
       return {
         ...state,
-        contacts: initialContacts,
+        contacts: initialContactsState,
       };
     }
 

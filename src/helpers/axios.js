@@ -1,7 +1,6 @@
 import axios from "axios";
 import cogoToast from "cogo-toast";
-
-const REACT_APP_API_URL = process.env.REACT_APP_API_BASE_URL;
+import { REACT_APP_API_URL } from "../constants/api";
 
 export default (history = null) => {
   const userToken = localStorage.getItem("token");

@@ -9,10 +9,10 @@ import {
   Icon,
   Select,
 } from "semantic-ui-react";
-import AppHeader from "../components/common";
 import { Prompt } from "react-router-dom";
 import "./new-contact.css";
 import countries from "../utils/countries";
+import AppHeader from "../components/common/Header";
 
 const NewContact = ({
   formProps: {
@@ -25,11 +25,9 @@ const NewContact = ({
     inputRef,
     localURL,
     onImageChange,
+    formIsHalfFilledOut,
   },
 }) => {
-  const formIsHalfFilledOut =
-    Object.values(form).filter((item) => item !== "").length > 1;
-
   const square = { width: 175, height: 175 };
 
   return (

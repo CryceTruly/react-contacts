@@ -20,7 +20,7 @@ const EditContactContainer = ({ setContact, contact, open, setOpen }) => {
 
   useEffect(() => {
     if (data) {
-      cogoToast.success("Contact updated");
+      cogoToast.success("Contact update saved");
       setContact(data.data);
       clearEdit()(dispatch);
       setOpen(false);

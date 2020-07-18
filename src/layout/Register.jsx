@@ -8,7 +8,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import AppHeader from "../components/common";
+import AppHeader from "../components/common/Header";
 const Register = ({
   formProps: { onChange, registerFormValid, loading, fieldErrors, onSubmit },
 }) => {

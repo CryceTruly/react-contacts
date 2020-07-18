@@ -40,6 +40,7 @@ const routes = [
   {
     path: "*",
     component: NotFound,
+    exact: true,
   },
 ];
 

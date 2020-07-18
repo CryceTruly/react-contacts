@@ -1,5 +1,4 @@
 import React from "react";
-import AppHeader from "../components/common";
 import {
   Button,
   Form,
@@ -9,6 +8,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import AppHeader from "../components/common/Header";
 
 const LoginComponent = ({
   formProps: {

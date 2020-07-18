@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Menu, Button, Image, Icon, Input } from "semantic-ui-react";
-import logo from "./logo.svg";
+import logo from "../../../assets/images/logo.svg";
 import { Link, useLocation, useHistory } from "react-router-dom";
-import { searchContacts } from "../../context/actions/contacts";
-import { GlobalContext } from "../../context/GlobalState";
-import { logout } from "../../context/actions/auth";
+import { searchContacts } from "../../../context/actions/contacts";
+import { GlobalContext } from "../../../context/GlobalState";
+import { logout } from "../../../context/actions/auth";
 
 const AppHeader = () => {
   const location = useLocation();
@@ -30,7 +30,7 @@ const AppHeader = () => {
         <Menu.Item position="right">
           <Input
             icon="search"
-            placeholder="Search..."
+            placeholder="Search here..."
             onChange={onChange}
             style={{ width: 300 }}
           />

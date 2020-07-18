@@ -26,7 +26,7 @@ const RecentlyContactedItems = ({
   const onArrowRightClick = () => {
     listContainerRef.current.scrollBy({
       top: 0,
-      left: 200,
+      left: 300,
       behavior: "smooth",
     });
   };
@@ -34,7 +34,7 @@ const RecentlyContactedItems = ({
   const onArrowLeftClick = () => {
     listContainerRef.current.scrollBy({
       top: 0,
-      left: -200,
+      left: -1000,
       behavior: "smooth",
     });
   };

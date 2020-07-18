@@ -1,5 +1,4 @@
 import React from "react";
-import AppHeader from "../components/common";
 import { Container, List, Header } from "semantic-ui-react";
 import FavoriteContacts from "./Favorite";
 import Thumbnail from "../components/common/Thumbnail";
@@ -7,6 +6,7 @@ import "./style.css";
 import ContactDetailContainer from "../containers/contacts/Detail";
 import Message from "../components/common/Message";
 import ItemsPlaceholder from "./Favorite/ItemsLoading";
+import AppHeader from "../components/common/Header";
 
 const ContactList = ({
   data: {

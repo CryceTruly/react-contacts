@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { GlobalContext } from "../../../context/GlobalState";
 import { useHistory } from "react-router-dom";
-import { createContact } from "../../../context/actions/contacts";
+import { createContact, clearEdit } from "../../../context/actions/contacts";
 
 export default () => {
   const [form, setForm] = useState({ isFavorite: false });
@@ -11,12 +11,13 @@ export default () => {
   const [fieldErrors, setFieldErrors] = useState({});
   const { loading, error, data } = state.addContact;
   const history = useHistory();
-  // const isEmpty = (field) => field && field === "";
-
+  const formIsHalfFilledOut =
+    Object.values(form).filter((item) => item !== "").length > 1 && !data;
 
   useEffect(() => {
     if (data) {
       history.push("");
+      clearEdit()(dispatch);
     }
   }, [data]);
 
@@ -68,5 +69,6 @@ export default () => {
     inputRef,
     localURL,
     onImageChange,
+    formIsHalfFilledOut,
   };
 };
