@@ -1,5 +1,26 @@
 import Axios from "../../helpers/axios";
 import { storage } from "../../firebase";
+import {
+  ADD_CONTACT_START,
+  ADD_CONTACT_SUCCESS,
+  ADD_CONTACT_ERROR,
+  GET_CONTACTS_START,
+  GET_CONTACTS_SUCCESS,
+  DELETE_CONTACT_START,
+  GET_CONTACTS_ERROR,
+  DELETE_CONTACT_SUCCESS,
+  DELETE_CONTACT_ERROR,
+  STAR_CONTACT_START,
+  STAR_CONTACT_SUCCESS,
+  STAR_CONTACT_ERROR,
+  EDIT_CONTACT_START,
+  EDIT_CONTACT_SUCCESS,
+  EDIT_CONTACT_ERROR,
+  CLEAR_EDIT_CONTACT,
+  SEARCH_CONTACTS,
+} from "../../constants/actionTypes";
+import { COULD_NOT_CONNECT_ERROR } from "../../constants/api";
+import { FIREBASE_CONTACT_STORAGE_REF } from "../../constants/firebase";
 
 export const createContact = ({
   countryCode: country_code,
@@ -7,31 +28,35 @@ export const createContact = ({
   lastName: last_name,
   phoneNumber: phone_number,
   contactPicture: contact_picture,
-  is_favorite,
+  isFavorite: is_favorite,
 }) => (dispatch) => {
   dispatch({
-    type: "ADD_CONTACT_START",
+    type: ADD_CONTACT_START,
   });
 
-  const saveToBackend = (contact_picture = null) => {
-    Axios.post(`${process.env.REACT_APP_API_BASE_URL}/contacts/`, {
+  const saveToBackend = (new_picture = null) => {
+    const no_pic_payload = {
       country_code,
       first_name,
       last_name,
       phone_number,
-      contact_picture,
       is_favorite,
-    })
+    };
+    Axios()
+      .post(
+        `/contacts/`,
+        new_picture ? no_pic_payload : { ...no_pic_payload, new_picture }
+      )
       .then((res) => {
         dispatch({
-          type: "ADD_CONTACT_SUCCESS",
+          type: ADD_CONTACT_SUCCESS,
           payload: { data: res.data, status: res.status },
         });
       })
       .catch((err) => {
         dispatch({
-          type: "ADD_CONTACT_ERROR",
-          payload: err.response ? err.response.data : "Network Error",
+          type: ADD_CONTACT_ERROR,
+          payload: err.response ? err.response.data : COULD_NOT_CONNECT_ERROR,
         });
       });
   };
@@ -48,12 +73,11 @@ export const createContact = ({
           return err;
         },
         async () => {
-          // gets the functions from storage refences the image storage in firebase by the children
+          // gets the functions from storage references the image storage in firebase by the children
           const url = await storage
-            .ref("images")
+            .ref(FIREBASE_CONTACT_STORAGE_REF)
             .child(contact_picture.name)
             .getDownloadURL();
-
           if (url) {
             saveToBackend(url);
           }
@@ -64,61 +88,64 @@ export const createContact = ({
   }
 };
 
-export const getContacts = () => (dispatch) => {
+export const getContacts = (history) => (dispatch) => {
   dispatch({
-    type: "GET_CONTACTS_START",
+    type: GET_CONTACTS_START,
   });
-  Axios.get(`${process.env.REACT_APP_API_BASE_URL}/contacts/`)
+  Axios(history)
+    .get(`/contacts/`)
     .then((res) => {
       dispatch({
-        type: "GET_CONTACTS_SUCCESS",
+        type: GET_CONTACTS_SUCCESS,
         payload: res.data,
       });
     })
     .catch((err) => {
       dispatch({
-        type: "GET_CONTACTS_ERROR",
-        payload: err.response ? err.response.data : "Network Error",
+        type: GET_CONTACTS_ERROR,
+        payload: err.response ? err.response.data : COULD_NOT_CONNECT_ERROR,
       });
     });
 };
 
 export const deleteContact = (id) => (dispatch) => {
   dispatch({
-    type: "DELETE_CONTACT_START",
+    type: DELETE_CONTACT_START,
   });
-  Axios.delete(`${process.env.REACT_APP_API_BASE_URL}/contacts/${id}`)
+  Axios()
+    .delete(`/contacts/${id}`)
     .then((res) => {
       dispatch({
-        type: "DELETE_CONTACT_SUCCESS",
+        type: DELETE_CONTACT_SUCCESS,
         payload: { status: res.status, id },
       });
     })
     .catch((err) => {
       dispatch({
-        type: "DELETE_CONTACT_ERROR",
-        payload: err.response ? err.response.data : "Network Error",
+        type: DELETE_CONTACT_ERROR,
+        payload: err.response ? err.response.data : COULD_NOT_CONNECT_ERROR,
       });
     });
 };
 
 export const starContact = (favorite, id) => (dispatch) => {
   dispatch({
-    type: "STAR_CONTACT_START",
+    type: STAR_CONTACT_START,
   });
-  Axios.patch(`${process.env.REACT_APP_API_BASE_URL}/contacts/${id}`, {
-    is_favorite: !favorite,
-  })
+  Axios()
+    .patch(`/contacts/${id}`, {
+      is_favorite: !favorite,
+    })
     .then((res) => {
       dispatch({
-        type: "STAR_CONTACT_SUCCESS",
+        type: STAR_CONTACT_SUCCESS,
         payload: { status: res.status, id, ...res.data },
       });
     })
     .catch((err) => {
       dispatch({
-        type: "STAR_CONTACT_ERROR",
-        payload: err.response ? err.response.data : "Network Error",
+        type: STAR_CONTACT_ERROR,
+        payload: err.response ? err.response.data : COULD_NOT_CONNECT_ERROR,
       });
     });
 };
@@ -132,32 +159,41 @@ export const editContact = (
     lastName: last_name,
     phoneNumber: phone_number,
     contactPicture: contact_picture,
-    is_favorite,
+    isFavorite: is_favorite,
   }
 ) => (dispatch) => {
   dispatch({
-    type: "EDIT_CONTACT_START",
+    type: EDIT_CONTACT_START,
   });
 
   const saveToBackend = (contact_picture = null) => {
-    Axios.put(`${process.env.REACT_APP_API_BASE_URL}/contacts/${id}`, {
+    console.log("new_picture", contact_picture);
+
+    const no_pic_payload = {
       country_code,
       first_name,
       last_name,
       phone_number,
-      contact_picture,
       is_favorite,
-    })
+    };
+
+    Axios()
+      .put(
+        `/contacts/${id}`,
+        contact_picture
+          ? { ...no_pic_payload, contact_picture: contact_picture }
+          : no_pic_payload
+      )
       .then((res) => {
         dispatch({
-          type: "EDIT_CONTACT_SUCCESS",
+          type: EDIT_CONTACT_SUCCESS,
           payload: { data: res.data, status: res.status },
         });
       })
       .catch((err) => {
         dispatch({
-          type: "EDIT_CONTACT_ERROR",
-          payload: err.response ? err.response.data : "Network Error",
+          type: EDIT_CONTACT_ERROR,
+          payload: err.response ? err.response.data : COULD_NOT_CONNECT_ERROR,
         });
       });
   };
@@ -176,7 +212,7 @@ export const editContact = (
         async () => {
           // gets the functions from storage refences the image storage in firebase by the children
           const url = await storage
-            .ref("images")
+            .ref(FIREBASE_CONTACT_STORAGE_REF)
             .child(contact_picture.name)
             .getDownloadURL();
 
@@ -188,4 +224,16 @@ export const editContact = (
   } else {
     saveToBackend();
   }
+};
+export const clearEdit = () => (dispatch) => {
+  return dispatch({
+    type: CLEAR_EDIT_CONTACT,
+  });
+};
+
+export const searchContacts = (searchText) => (dispatch) => {
+  return dispatch({
+    type: SEARCH_CONTACTS,
+    payload: searchText,
+  });
 };

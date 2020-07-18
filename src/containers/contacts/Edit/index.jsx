@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import EditModal from "../../../layout/Edit";
 import { GlobalContext } from "../../../context/GlobalState";
-import { editContact } from "../../../context/actions/contacts";
+import { editContact, clearEdit } from "../../../context/actions/contacts";
 import cogoToast from "cogo-toast";
 
 const EditContactContainer = ({ setContact, contact, open, setOpen }) => {
@@ -11,23 +11,18 @@ const EditContactContainer = ({ setContact, contact, open, setOpen }) => {
   };
 
   const [fieldErrors, setFieldErrors] = useState({});
-  console.log("form", form);
-
   const {
     contactsState: {
-      contacts,
       editContact: { loading, data },
     },
     contactsDispatch: dispatch,
   } = useContext(GlobalContext);
 
-  console.log("contacts", contacts.data);
-  console.log("data", data);
-
   useEffect(() => {
     if (data) {
-      cogoToast.success("Contact updated");
+      cogoToast.success("Contact update saved");
       setContact(data.data);
+      clearEdit()(dispatch);
       setOpen(false);
     }
   }, [data]);
@@ -41,6 +36,7 @@ const EditContactContainer = ({ setContact, contact, open, setOpen }) => {
         phoneNumber: contact.phone_number,
         lastName: contact.last_name,
         countryCode: contact.country_code,
+        isFavorite: contact.is_favorite,
       });
     }
   }, []);
@@ -74,6 +70,7 @@ const EditContactContainer = ({ setContact, contact, open, setOpen }) => {
     <EditModal
       open={open}
       setOpen={setOpen}
+      setContact={setContact}
       formProps={{
         onChange,
         newContactFormValid,

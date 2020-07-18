@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Form,
   Button,
@@ -6,17 +6,13 @@ import {
   Header,
   Card,
   Image,
-  Popup,
-  Segment,
   Icon,
   Select,
 } from "semantic-ui-react";
-import AppHeader from "../components/common";
 import { Prompt } from "react-router-dom";
-
 import "./new-contact.css";
-import { useRef } from "react";
 import countries from "../utils/countries";
+import AppHeader from "../components/common/Header";
 
 const NewContact = ({
   formProps: {
@@ -25,14 +21,14 @@ const NewContact = ({
     loading,
     fieldErrors,
     onSubmit,
+    form,
     inputRef,
     localURL,
     onImageChange,
+    formIsHalfFilledOut,
   },
 }) => {
-  const formIsHalfFilledOut = newContactFormValid;
-
-  const square = { width: 175, height: 175, border: "1px solid #ccc" };
+  const square = { width: 175, height: 175 };
 
   return (
     <>
@@ -57,7 +53,29 @@ const NewContact = ({
                   style={{ display: "none" }}
                 />
                 <div className="image-container">
-                  <Image circular style={square} src={localURL}></Image>
+                  <div
+                    style={
+                      localURL
+                        ? square
+                        : { ...square, border: "1px solid #ccc" }
+                    }
+                    onClick={() => {
+                      inputRef.current && inputRef.current.click();
+                    }}
+                  >
+                    {localURL && (
+                      <Image
+                        circular
+                        src={localURL}
+                        height={175}
+                        width={175}
+                      ></Image>
+                    )}
+
+                    {!localURL && (
+                      <h5 style={{ margin: "60px" }}>choose picture</h5>
+                    )}
+                  </div>
                   <Icon
                     size="large"
                     name="edit"
@@ -99,10 +117,10 @@ const NewContact = ({
                 </Form.Group>
                 <Form.Checkbox
                   name="isFavorite"
-                  onChange={(e) => {
+                  onChange={(e, data) => {
                     onChange(e, {
                       name: "isFavorite",
-                      value: e.target.checked,
+                      value: data.checked,
                     });
                   }}
                   label="Add to Favorites"
@@ -111,6 +129,7 @@ const NewContact = ({
                   disabled={newContactFormValid}
                   onClick={onSubmit}
                   loading={loading}
+                  primary
                   type="submit"
                 >
                   Submit

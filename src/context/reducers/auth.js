@@ -1,13 +1,23 @@
+import {
+  LOGIN_START,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
+  CLEAR_AUTH,
+  REGISTER_SUCCESS,
+  REGISTER_ERROR,
+  REGISTER_START,
+} from "../../constants/actionTypes";
+
 const authReducer = (state, action) => {
   switch (action.type) {
-    case "LOGIN_START":
-    case "REGISTER_START":
+    case LOGIN_START:
+    case REGISTER_START:
       return {
         ...state,
         auth: { ...state.auth, loading: true },
       };
-    case "LOGIN_SUCCESS":
-    case "REGISTER_SUCCESS":
+    case LOGIN_SUCCESS:
+    case REGISTER_SUCCESS:
       return {
         ...state,
         auth: {
@@ -18,8 +28,8 @@ const authReducer = (state, action) => {
         },
       };
 
-    case "LOGIN_ERROR":
-    case "REGISTER_ERROR":
+    case LOGIN_ERROR:
+    case REGISTER_ERROR:
       return {
         ...state,
         auth: {
@@ -29,7 +39,7 @@ const authReducer = (state, action) => {
         },
       };
 
-    case "CLEAR_AUTH": {
+    case CLEAR_AUTH: {
       return {
         ...state,
         auth: {
@@ -40,6 +50,7 @@ const authReducer = (state, action) => {
         },
       };
     }
+
     default:
       return state;
   }

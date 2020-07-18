@@ -1,6 +1,36 @@
+import initialContactsState from "../initialStates/initialContactsState";
+import {
+  ADD_CONTACT_START,
+  ADD_CONTACT_SUCCESS,
+  ADD_CONTACT_ERROR,
+  GET_CONTACTS_START,
+  GET_CONTACTS_SUCCESS,
+  DELETE_CONTACT_START,
+  GET_CONTACTS_ERROR,
+  DELETE_CONTACT_SUCCESS,
+  DELETE_CONTACT_ERROR,
+  STAR_CONTACT_START,
+  STAR_CONTACT_SUCCESS,
+  STAR_CONTACT_ERROR,
+  EDIT_CONTACT_START,
+  EDIT_CONTACT_SUCCESS,
+  EDIT_CONTACT_ERROR,
+  CLEAR_EDIT_CONTACT,
+  SEARCH_CONTACTS,
+  LOGOUT_USER_OUT,
+} from "../../constants/actionTypes";
+
+const getNextData = (payload, prev) => {
+  if (prev) {
+    return [payload, ...prev];
+  } else {
+    return payload;
+  }
+};
+
 export default (state, action) => {
   switch (action.type) {
-    case "ADD_CONTACT_START":
+    case ADD_CONTACT_START:
       return {
         ...state,
         addContact: {
@@ -8,9 +38,14 @@ export default (state, action) => {
           loading: true,
         },
       };
-    case "ADD_CONTACT_SUCCESS":
+    case ADD_CONTACT_SUCCESS:
       return {
         ...state,
+        contacts: {
+          ...state.contacts,
+          loading: false,
+          data: getNextData(action.payload.data, state.contacts.data),
+        },
         addContact: {
           ...state.contacts.addContact,
           loading: false,
@@ -18,7 +53,7 @@ export default (state, action) => {
         },
       };
 
-    case "ADD_CONTACT_ERROR":
+    case ADD_CONTACT_ERROR:
       return {
         ...state,
         addContact: {
@@ -28,16 +63,17 @@ export default (state, action) => {
         },
       };
 
-    case "GET_CONTACTS_START":
+    case GET_CONTACTS_START:
       return {
         ...state,
         contacts: {
           ...state.contacts,
           loading: true,
+          error: null,
         },
       };
 
-    case "GET_CONTACTS_SUCCESS":
+    case GET_CONTACTS_SUCCESS:
       return {
         ...state,
         contacts: {
@@ -47,7 +83,7 @@ export default (state, action) => {
         },
       };
 
-    case "GET_CONTACTS_ERROR":
+    case GET_CONTACTS_ERROR:
       return {
         ...state,
         contacts: {
@@ -57,7 +93,7 @@ export default (state, action) => {
         },
       };
 
-    case "DELETE_CONTACT_START":
+    case DELETE_CONTACT_START:
       return {
         ...state,
         deleteContact: {
@@ -66,7 +102,7 @@ export default (state, action) => {
         },
       };
 
-    case "DELETE_CONTACT_SUCCESS":
+    case DELETE_CONTACT_SUCCESS:
       return {
         ...state,
         deleteContact: {
@@ -83,7 +119,7 @@ export default (state, action) => {
         },
       };
 
-    case "DELETE_CONTACT_ERROR":
+    case DELETE_CONTACT_ERROR:
       return {
         ...state,
         deleteContact: {
@@ -93,7 +129,7 @@ export default (state, action) => {
         },
       };
 
-    case "STAR_CONTACT_START":
+    case STAR_CONTACT_START:
       return {
         ...state,
         starContact: {
@@ -102,7 +138,7 @@ export default (state, action) => {
         },
       };
 
-    case "STAR_CONTACT_SUCCESS":
+    case STAR_CONTACT_SUCCESS:
       return {
         ...state,
         starContact: {
@@ -119,7 +155,7 @@ export default (state, action) => {
         },
       };
 
-    case "STAR_CONTACT_ERROR":
+    case STAR_CONTACT_ERROR:
       return {
         ...state,
         starContact: {
@@ -129,7 +165,7 @@ export default (state, action) => {
         },
       };
 
-    case "EDIT_CONTACT_START":
+    case EDIT_CONTACT_START:
       return {
         ...state,
         editContact: {
@@ -138,8 +174,7 @@ export default (state, action) => {
         },
       };
 
-    case "EDIT_CONTACT_SUCCESS":
-      console.log("action.payload", action.payload);
+    case EDIT_CONTACT_SUCCESS:
       return {
         ...state,
         editContact: {
@@ -156,7 +191,47 @@ export default (state, action) => {
         },
       };
 
-    case "EDIT_CONTACT_ERROR":
+    case CLEAR_EDIT_CONTACT:
+      return {
+        ...state,
+        editContact: {
+          ...state.contacts.editContact,
+          loading: false,
+          data: null,
+        },
+        addContact: {
+          ...state.contacts.addContact,
+          loading: false,
+          data: null,
+        },
+      };
+
+    case SEARCH_CONTACTS:
+      const userText = action.payload.replace("+", "").toLowerCase();
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          isSearchActive: !!action.payload.length ? [] : false,
+          foundContacts: state.contacts.data.filter((item) => {
+            try {
+              return (
+                item.first_name.toLowerCase().search(userText) !== -1 ||
+                item.last_name.toLowerCase().search(userText) !== -1 ||
+                item.phone_number.toLowerCase().search(userText) !== -1 ||
+                item.country_code
+                  .replace("+")
+                  .toLowerCase()
+                  .search(userText) !== -1
+              );
+            } catch (error) {
+              return [];
+            }
+          }),
+        },
+      };
+
+    case EDIT_CONTACT_ERROR:
       return {
         ...state,
         editContact: {
@@ -165,6 +240,13 @@ export default (state, action) => {
           error: action.payload,
         },
       };
+
+    case LOGOUT_USER_OUT: {
+      return {
+        ...state,
+        contacts: initialContactsState,
+      };
+    }
 
     default:
       return state;

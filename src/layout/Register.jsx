@@ -4,15 +4,13 @@ import {
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import Logo from "../components/common/logo.svg";
-import AppHeader from "../components/common";
+import AppHeader from "../components/common/Header";
 const Register = ({
-  formProps: { onChange, registerFormValid, loading, fieldErrors, onSubmit, },
+  formProps: { onChange, registerFormValid, loading, fieldErrors, onSubmit },
 }) => {
   return (
     <div>

@@ -1,15 +1,14 @@
 import React from "react";
 import {
   Modal,
-  Card,
   Form,
   Image,
   Icon,
   Select,
   Button,
+  TransitionablePortal,
 } from "semantic-ui-react";
 import countries from "../../utils/countries";
-
 import "./style.css";
 
 const EditModal = ({
@@ -19,27 +18,40 @@ const EditModal = ({
     onChange,
     newContactFormValid,
     loading,
-    fieldErrors,
     onSubmit,
     inputRef,
     localURL,
     onImageChange,
-    form: { contactPicture, firstName, phoneNumber, lastName, countryCode },
+    form: {
+      contactPicture,
+      firstName,
+      phoneNumber,
+      lastName,
+      countryCode,
+      isFavorite,
+    },
   },
 }) => {
-  const square = { width: 175, height: 175, border: "1px solid #ccc" };
-
+  const square = { width: 175, height: 175 };
   return (
-    <Modal
+    <TransitionablePortal
       open={open}
-      centered={false}
-      closeIcon
+      closeOnDocumentClick={false}
       onClose={() => {
         setOpen(false);
       }}
     >
-      <Card fluid>
-        <Card.Content>
+      <Modal
+        open={open}
+        centered={false}
+        closeOnDocumentClick={false}
+        closeIcon
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <Modal.Header>Edit Contact</Modal.Header>
+        <Modal.Content>
           <Form unstackable autoComplete="off">
             <input
               type="file"
@@ -48,12 +60,39 @@ const EditModal = ({
               onChange={onImageChange}
               style={{ display: "none" }}
             />
+
             <div className="image-container">
-              <Image
-                circular
-                style={square}
-                src={contactPicture || localURL}
-              ></Image>
+              <div
+                style={
+                  localURL || contactPicture
+                    ? square
+                    : { ...square, border: "1px solid #ccc" }
+                }
+                onClick={() => {
+                  inputRef.current && inputRef.current.click();
+                }}
+              >
+                {localURL && (
+                  <Image
+                    circular
+                    src={localURL}
+                    height={175}
+                    width={175}
+                  ></Image>
+                )}
+                {contactPicture && !localURL && (
+                  <Image
+                    circular
+                    src={contactPicture}
+                    height={175}
+                    width={175}
+                  ></Image>
+                )}
+
+                {!localURL && !contactPicture && (
+                  <h5 style={{ margin: "60px" }}>choose picture</h5>
+                )}
+              </div>
               <Icon
                 size="large"
                 name="edit"
@@ -99,10 +138,11 @@ const EditModal = ({
             </Form.Group>
             <Form.Checkbox
               name="isFavorite"
-              onChange={(e) => {
+              defaultChecked={isFavorite}
+              onChange={(e, data) => {
                 onChange(e, {
                   name: "isFavorite",
-                  value: e.target.checked,
+                  value: data.checked,
                 });
               }}
               label="Add to Favorites"
@@ -111,14 +151,15 @@ const EditModal = ({
               disabled={newContactFormValid}
               onClick={onSubmit}
               loading={loading}
+              primary
               type="submit"
             >
               Save
             </Button>
           </Form>
-        </Card.Content>
-      </Card>
-    </Modal>
+        </Modal.Content>
+      </Modal>
+    </TransitionablePortal>
   );
 };
 

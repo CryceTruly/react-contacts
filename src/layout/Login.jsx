@@ -1,16 +1,14 @@
 import React from "react";
-import Logo from "../components/common/logo.svg";
-import AppHeader from "../components/common";
 import {
   Button,
   Form,
   Grid,
   Header,
-  Image,
   Message,
   Segment,
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import AppHeader from "../components/common/Header";
 
 const LoginComponent = ({
   formProps: {

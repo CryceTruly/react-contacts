@@ -1,26 +1,24 @@
 import { useState, useContext, useEffect, useRef } from "react";
-//import { useHistory } from "react-router-dom";
 import { GlobalContext } from "../../../context/GlobalState";
-import cogoToast from "cogo-toast";
 import { useHistory } from "react-router-dom";
-import { createContact } from "../../../context/actions/contacts";
-import uploadTofirebase from "./uploadTofirebase";
+import { createContact, clearEdit } from "../../../context/actions/contacts";
 
 export default () => {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({ isFavorite: false });
   const { contactsState: state, contactsDispatch: dispatch } = useContext(
     GlobalContext
   );
   const [fieldErrors, setFieldErrors] = useState({});
   const { loading, error, data } = state.addContact;
   const history = useHistory();
-  // const isEmpty = (field) => field && field === "";
+  const formIsHalfFilledOut =
+    Object.values(form).filter((item) => item !== "").length > 1 && !data;
 
   useEffect(() => {
     if (data) {
       history.push("");
+      clearEdit()(dispatch);
     }
-    // clearAuthState();
   }, [data]);
 
   useEffect(() => {
@@ -71,5 +69,6 @@ export default () => {
     inputRef,
     localURL,
     onImageChange,
+    formIsHalfFilledOut,
   };
 };

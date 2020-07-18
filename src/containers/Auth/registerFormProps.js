@@ -1,8 +1,6 @@
 import { useState, useContext, useEffect } from "react";
-//import { useHistory } from "react-router-dom";
-import { loginUser, clearAuthState, register } from "../../context/actions/auth";
+import { register } from "../../context/actions/auth";
 import { GlobalContext } from "../../context/GlobalState";
-import cogoToast from "cogo-toast";
 import { useHistory } from "react-router-dom";
 
 export default () => {
@@ -27,14 +25,11 @@ export default () => {
     if (error) {
       for (const item in error) {
         setFieldErrors({ ...fieldErrors, [item]: error[item][0] });
-
       }
     }
   }, [error]);
 
   const onSubmit = () => {
-    //loginUser(form)();
-    // history.push("/");
     setFieldErrors(null);
     register(form)(dispatch);
   };
